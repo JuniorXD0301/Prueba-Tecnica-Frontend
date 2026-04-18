@@ -6,7 +6,12 @@ type Props = {
 };
 
 export default async function PostDetail({ params }: Props) {
-  const { id } = await params;
+
+ const { id } = await params;
+
+  if (!id || isNaN(Number(id))) {
+    throw new Error("ID inválido");
+  }
 
   const post = await getPostById(Number(id));
 
