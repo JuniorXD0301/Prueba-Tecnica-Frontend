@@ -1,8 +1,6 @@
 import { SortField, SortOrder } from "../core/interfaces/Post";
 import { PostsTableProps } from "../core/interfaces/PostsTableProps";
 
-import { useRouter } from "next/navigation";
-
 function SortIcon({
   field,
   active,

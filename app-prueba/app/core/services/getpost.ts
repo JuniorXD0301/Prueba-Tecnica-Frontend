@@ -18,7 +18,7 @@ export async function getPostById(id: number): Promise<Post> {
   const res = await fetch(`${BASE_URL}/posts/${id}`, {
     cache: "force-cache",
   });
-
+console.log(res)
   if (!res.ok) {
     throw new Error(`Error al obtener post ${id}: ${res.status}`);
   }

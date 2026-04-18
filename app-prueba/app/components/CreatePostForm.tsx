@@ -1,59 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCreatePost } from "../core/services/usecreatepost";
 
-interface CreatePostModalProps {
-  onClose: () => void;
-}
-
-export function CreatePostModal({ onClose }: CreatePostModalProps) {
+export function CreatePostForm() {
+  const router = useRouter();
   const { form, errors, status, serverError, handleChange, handleSubmit, reset } =
-    useCreatePost(onClose);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && status !== "loading") {
-        reset();
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose, reset, status]);
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && status !== "loading") {
-      reset();
-      onClose();
-    }
-  };
+    useCreatePost(() => router.push("/"));
 
   const handleCancel = () => {
     reset();
-    onClose();
+    router.back();
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-box create-modal">
-        <div className="modal-header">
-          <h2 className="modal-heading">Nuevo post</h2>
-          {status !== "loading" && (
-            <button
-              className="modal-close"
-              onClick={handleCancel}
-              aria-label="Cerrar"
-            >
-              ✕
-            </button>
-          )}
+    <>
+      <button className="back-btn" onClick={handleCancel}>
+        ← Volver al listado
+      </button>
+
+      <div className="detail-card">
+        <div className="detail-header">
+          <span className="detail-badge">Nuevo post</span>
         </div>
+
+        <h1 className="detail-title">Crear publicación</h1>
+        <div className="detail-divider" />
 
         {status === "success" && (
           <div className="create-feedback success">
             <span>✅</span>
-            <p>¡Post creado exitosamente!</p>
+            <p>¡Post creado exitosamente! Redirigiendo…</p>
           </div>
         )}
 
@@ -66,6 +43,7 @@ export function CreatePostModal({ onClose }: CreatePostModalProps) {
 
         {status !== "success" && (
           <div className="create-form">
+
             <div className="field">
               <label htmlFor="userId" className="field-label">
                 Usuario <span className="required">*</span>
@@ -90,6 +68,7 @@ export function CreatePostModal({ onClose }: CreatePostModalProps) {
               )}
             </div>
 
+
             <div className="field">
               <label htmlFor="cf-title" className="field-label">
                 Título <span className="required">*</span>
@@ -110,6 +89,7 @@ export function CreatePostModal({ onClose }: CreatePostModalProps) {
               )}
             </div>
 
+   
             <div className="field">
               <label htmlFor="cf-body" className="field-label">
                 Contenido <span className="required">*</span>
@@ -122,12 +102,13 @@ export function CreatePostModal({ onClose }: CreatePostModalProps) {
                 value={form.body}
                 onChange={handleChange}
                 disabled={status === "loading"}
-                rows={4}
+                rows={5}
               />
               {errors.body && (
                 <span className="field-hint error">{errors.body}</span>
               )}
             </div>
+
 
             <div className="create-actions">
               <button
@@ -155,6 +136,6 @@ export function CreatePostModal({ onClose }: CreatePostModalProps) {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }

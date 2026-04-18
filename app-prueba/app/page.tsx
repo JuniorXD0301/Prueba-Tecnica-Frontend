@@ -2,12 +2,13 @@
 
 import { PageSize, usePosts } from "./core/services/usepost";
 import { PostsTable } from "./components/Poststable";
-import { PostModal } from "./components/Postmodal";
 import { Pagination } from "./components/Pagination";
-import { useState } from "react";
-import { CreatePostModal } from "./components/CreatePostModal";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+
+  const router = useRouter();
+
   const {
     posts,
     totalPosts,
@@ -24,11 +25,8 @@ export default function Home() {
     handlePageSizeChange,
     totalPages,
     PAGE_SIZE_OPTIONS,
-    selectedPost,
-    setSelectedPost,
   } = usePosts();
 
-    const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <main className="page">
@@ -41,7 +39,7 @@ export default function Home() {
             </div>
             <button
               className="btn-create"
-              onClick={() => setShowCreateModal(true)}
+              onClick={() => router.push("/posts/create")}
             >
               + Nuevo post
             </button>
@@ -115,7 +113,7 @@ export default function Home() {
               sortField={sortField}
               sortOrder={sortOrder}
               onSort={handleSort}
-              onSelectPost={setSelectedPost}
+              onSelectPost={(post) => router.push(`/posts/${post.id}`)}
             />
 
             <div className="footer-controls">
@@ -129,14 +127,7 @@ export default function Home() {
         )}
       </div>
 
-      {selectedPost && (
-        <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
-      )}
 
-      {/* Modal crear post */}
-      {showCreateModal && (
-        <CreatePostModal onClose={() => setShowCreateModal(false)} />
-      )}
     </main>
   );
 }
