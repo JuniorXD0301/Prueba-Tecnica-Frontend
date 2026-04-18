@@ -1,9 +1,11 @@
-"use client"
+"use client";
 
 import { PageSize, usePosts } from "./core/services/usepost";
 import { PostsTable } from "./components/Poststable";
 import { PostModal } from "./components/Postmodal";
 import { Pagination } from "./components/Pagination";
+import { useState } from "react";
+import { CreatePostModal } from "./components/CreatePostModal";
 
 export default function Home() {
   const {
@@ -25,18 +27,26 @@ export default function Home() {
     selectedPost,
     setSelectedPost,
   } = usePosts();
- 
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
+
   return (
     <main className="page">
       <div className="container">
-
         <header className="page-header">
-          <h1 className="page-title">Biblioteca</h1>
-          <p className="page-subtitle">
-            Listado de libros
-          </p>
+          <div className="header-row">
+            <div>
+              <h1 className="page-title">Biblioteca</h1>
+              <p className="page-subtitle">Listado de libros</p>
+            </div>
+            <button
+              className="btn-create"
+              onClick={() => setShowCreateModal(true)}
+            >
+              + Nuevo post
+            </button>
+          </div>
         </header>
- 
 
         <div className="controls">
           <div className="search-wrapper">
@@ -59,7 +69,7 @@ export default function Home() {
               </button>
             )}
           </div>
- 
+
           <div className="page-size-selector">
             <label htmlFor="pageSize">Mostrar:</label>
             <select
@@ -77,7 +87,7 @@ export default function Home() {
             </select>
           </div>
         </div>
- 
+
         {/* loading */}
         {loading && (
           <div className="state-message">
@@ -85,23 +95,21 @@ export default function Home() {
             <p>Cargando posts…</p>
           </div>
         )}
- 
-        
+
         {error && (
           <div className="state-message error">
             <span>⚠️</span>
             <p>{error}</p>
           </div>
         )}
- 
-        
+
         {!loading && !error && (
           <>
             <div className="results-info">
               {totalPosts} {totalPosts === 1 ? "resultado" : "resultados"}
               {searchQuery && ` para "${searchQuery}"`}
             </div>
- 
+
             <PostsTable
               posts={posts}
               sortField={sortField}
@@ -109,7 +117,7 @@ export default function Home() {
               onSort={handleSort}
               onSelectPost={setSelectedPost}
             />
- 
+
             <div className="footer-controls">
               <Pagination
                 currentPage={currentPage}
@@ -120,12 +128,14 @@ export default function Home() {
           </>
         )}
       </div>
- 
+
       {selectedPost && (
-        <PostModal
-          post={selectedPost}
-          onClose={() => setSelectedPost(null)}
-        />
+        <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+      )}
+
+      {/* Modal crear post */}
+      {showCreateModal && (
+        <CreatePostModal onClose={() => setShowCreateModal(false)} />
       )}
     </main>
   );

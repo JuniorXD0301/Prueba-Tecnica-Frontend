@@ -1,6 +1,7 @@
-
 import { SortField, SortOrder } from "../core/interfaces/Post";
 import { PostsTableProps } from "../core/interfaces/PostsTableProps";
+
+import { useRouter } from "next/navigation";
 
 function SortIcon({
   field,
@@ -17,7 +18,7 @@ function SortIcon({
     </span>
   );
 }
- 
+
 export function PostsTable({
   posts,
   sortField,
@@ -25,6 +26,8 @@ export function PostsTable({
   onSort,
   onSelectPost,
 }: PostsTableProps) {
+  
+
   if (posts.length === 0) {
     return (
       <div className="empty-state">
@@ -33,7 +36,7 @@ export function PostsTable({
       </div>
     );
   }
- 
+
   return (
     <div className="table-wrapper">
       <table className="posts-table">
@@ -64,7 +67,7 @@ export function PostsTable({
               />
             </th>
             <th className="col-body">Contenido</th>
-            <th className="col-action">Acción</th>
+            <th className="col-action">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -75,21 +78,22 @@ export function PostsTable({
               <td className="col-body">
                 <span className="body-preview">
                   {post.body.slice(0, 50)}
-                  {post.body.length > 50 && (
-                    <span className="ellipsis">…</span>
-                  )}
+
+                  {post.body.length > 50 && <span className="ellipsis">…</span>}
                 </span>
               </td>
               <td className="col-action">
-                <button
-                  className="btn-view"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectPost(post);
-                  }}
-                >
-                  Ver más
-                </button>
+                <div className="action-btns">
+                  <button
+                    className="btn-view"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectPost(post);
+                    }}
+                  >
+                    Ver más
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
