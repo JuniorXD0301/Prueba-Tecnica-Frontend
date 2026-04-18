@@ -4,9 +4,10 @@ import { PageSize, usePosts } from "./core/services/usepost";
 import { PostsTable } from "./components/Poststable";
 import { Pagination } from "./components/Pagination";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { CreatePostModal } from "./modals/Createpostmodal";
 
 export default function Home() {
-
   const router = useRouter();
 
   const {
@@ -27,6 +28,7 @@ export default function Home() {
     PAGE_SIZE_OPTIONS,
   } = usePosts();
 
+  const [isCreating, setIsCreating] = useState(false);
 
   return (
     <main className="page">
@@ -37,10 +39,7 @@ export default function Home() {
               <h1 className="page-title">Biblioteca</h1>
               <p className="page-subtitle">Listado de libros</p>
             </div>
-            <button
-              className="btn-create"
-              onClick={() => router.push("/posts/create")}
-            >
+            <button className="btn-create" onClick={() => setIsCreating(true)}>
               + Nuevo post
             </button>
           </div>
@@ -127,7 +126,7 @@ export default function Home() {
         )}
       </div>
 
-
+      {isCreating && <CreatePostModal onClose={() => setIsCreating(false)} />}
     </main>
   );
 }
